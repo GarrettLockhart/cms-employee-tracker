@@ -3,6 +3,7 @@
 .LSOverride
 
 node_modules
+.env
 
 .DocumentRevisions-V100
 .fseventsd
