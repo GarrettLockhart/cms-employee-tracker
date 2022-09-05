@@ -2,6 +2,7 @@ const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
+const db = require('./config/connection');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
@@ -9,13 +10,6 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
 
 const runInquirer = () => {
   inquirer
@@ -43,8 +37,6 @@ const runInquirer = () => {
       },
     ])
     .then((answers) => {
-      // const { choices } = answers.userSelection;
-
       if (answers.userSelection === 'View all departments') {
         viewDepartments();
       }
@@ -60,8 +52,8 @@ const runInquirer = () => {
       if (answers.userSelection === 'Add a role') {
         addRole();
       }
-      if (answers.userSelection === 'Add a role') {
-        addRole();
+      if (answers.userSelection === 'Add an employee') {
+        addEmployee();
       }
     });
 };
@@ -73,6 +65,17 @@ const addDepartment = () => {
         type: 'input',
         message: 'Please enter the name of the department you want to add:',
         name: 'departmentName',
+        default: () => {},
+        validate: function (name) {
+          valid = /^[a-zA-Z\s]*$/.test(name);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only letters, and spaces');
+            return false;
+          }
+        },
       },
     ])
     .then((departmentAnswer) => {
@@ -81,6 +84,8 @@ const addDepartment = () => {
           `INSERT INTO department (name) VALUES ("${departmentAnswer.departmentName}")`
         )
         .then(([rows, fields]) => {
+          console.log('\n');
+          viewDepartments();
           runInquirer();
         })
         .catch(console.log);
@@ -94,19 +99,142 @@ const addRole = () => {
         type: 'input',
         message: 'Please enter the title of the role you want to add:',
         name: 'roleName',
+        default: () => {},
+        validate: function (name) {
+          valid = /^[a-zA-Z\s]*$/.test(name);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only letters, and spaces');
+            return false;
+          }
+        },
       },
       {
         type: 'input',
         message: 'Please enter salary of the role you want to add:',
         name: 'salaryAmt',
+        default: () => {},
+        validate: function (salary) {
+          valid = /^[1-9]+[0-9]*$/.test(salary);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only numbers, no commas or spaces');
+            return false;
+          }
+        },
+      },
+      {
+        type: 'input',
+        message: 'Please enter a department id (number):',
+        name: 'departmentId',
+        default: () => {},
+        validate: function (salary) {
+          valid = /^[1-9]+[0-9]*$/.test(salary);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only numbers, no commas or spaces');
+            return false;
+          }
+        },
       },
     ])
     .then((roleAnswer) => {
       db.promise()
         .query(
-          `INSERT INTO department (name) VALUES ("${roleAnswer.roleName}", "${roleAnswer.salaryAmy})`
+          `INSERT INTO role (title, salary, department_id) VALUES ("${roleAnswer.roleName}", "${roleAnswer.salaryAmt}", "${roleAnswer.departmentId}")`
         )
         .then(([rows, fields]) => {
+          console.log('\n');
+          viewRoles();
+          runInquirer();
+        })
+        .catch(console.log);
+    });
+};
+
+const addEmployee = () => {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        message: 'Please enter the first name of the employee you want to add:',
+        name: 'employeeFirstName',
+        default: () => {},
+        validate: function (name) {
+          valid = /^[a-zA-Z\s]*$/.test(name);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only letters, and spaces');
+            return false;
+          }
+        },
+      },
+      {
+        type: 'input',
+        message: 'Please enter the last name of the employee you want to add:',
+        name: 'employeeLastName',
+        default: () => {},
+        validate: function (name) {
+          valid = /^[a-zA-Z\s]*$/.test(name);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only letters, and spaces');
+            return false;
+          }
+        },
+      },
+      {
+        type: 'input',
+        message:
+          'Please enter the role ID of the employee you want to add (number):',
+        name: 'employeeRoleId',
+        default: () => {},
+        validate: function (salary) {
+          valid = /^[1-9]+[0-9]*$/.test(salary);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only numbers, no commas or spaces');
+            return false;
+          }
+        },
+      },
+      {
+        type: 'input',
+        message: 'Please enter the ID of the employees manager (number):',
+        name: 'employeeManagerId',
+        default: () => {},
+        validate: function (salary) {
+          valid = /^[1-9]+[0-9]*$/.test(salary);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only numbers, no commas or spaces');
+            return false;
+          }
+        },
+      },
+    ])
+    .then((employeeAnswer) => {
+      db.promise()
+        .query(
+          `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${employeeAnswer.employeeFirstName}", "${employeeAnswer.employeeLastName}", "${employeeAnswer.employeeRoleId}", "${employeeAnswer.employeeManagerId}")`
+        )
+        .then(([rows, fields]) => {
+          console.log('\n');
+          viewEmployees();
           runInquirer();
         })
         .catch(console.log);
@@ -117,6 +245,7 @@ const viewDepartments = () => {
   db.promise()
     .query('SELECT id AS ID, name AS "Department Name" FROM department')
     .then(([rows, fields]) => {
+      console.log('\n');
       console.table(rows);
       runInquirer();
     })
@@ -129,6 +258,7 @@ const viewRoles = () => {
       'SELECT id AS "Role ID", title AS "Role Title", salary AS Salary FROM role'
     )
     .then(([rows, fields]) => {
+      console.log('\n');
       console.table(rows);
       runInquirer();
     })
@@ -141,6 +271,7 @@ const viewEmployees = () => {
       'SELECT id AS "Employee ID", first_name AS "First Name", last_name AS "Last Name", role_id AS "Role ID", manager_id AS "Manager ID" FROM employee'
     )
     .then(([rows, fields]) => {
+      console.log('\n');
       console.table(rows);
       runInquirer();
     })
