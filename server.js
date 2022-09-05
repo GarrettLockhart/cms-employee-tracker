@@ -55,6 +55,15 @@ const runInquirer = () => {
       if (answers.userSelection === 'Add an employee') {
         addEmployee();
       }
+      if (answers.userSelection === 'Update an employee role') {
+        updateEmployeeRole();
+      }
+      if (answers.userSelection === 'Update an employee manager') {
+        updateEmployeeManager();
+      }
+      if (answers.userSelection === 'View employees by department') {
+        viewEmployeeByDepartment();
+      }
     });
 };
 
@@ -240,6 +249,121 @@ const addEmployee = () => {
         .catch(console.log);
     });
 };
+
+const updateEmployeeManager = () => {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        message:
+          'Please enter the employee ID you would like to update (number):',
+        name: 'employeeIdSelection',
+        default: () => {},
+        validate: function (salary) {
+          valid = /^[1-9]+[0-9]*$/.test(salary);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only numbers, no commas or spaces');
+            return false;
+          }
+        },
+      },
+      {
+        type: 'input',
+        message:
+          'Please enter the ID of the manager you would like to give this employee (number):',
+        name: 'employeeNewManagerId',
+        default: () => {},
+        validate: function (salary) {
+          valid = /^[1-9]+[0-9]*$/.test(salary);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only numbers, no commas or spaces');
+            return false;
+          }
+        },
+      },
+    ])
+    .then((employeeSelection) => {
+      db.promise()
+        .query(
+          `UPDATE employee SET manager_id = ${employeeSelection.employeeNewManagerId} WHERE id = ${employeeSelection.employeeIdSelection}`
+        )
+        .then(([rows, fields]) => {
+          console.log('\n');
+          viewEmployees();
+          runInquirer();
+        })
+        .catch(console.log);
+    });
+};
+
+const updateEmployeeRole = () => {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        message:
+          'Please enter the employee ID you would like to update (number):',
+        name: 'employeeIdSelection',
+        default: () => {},
+        validate: function (salary) {
+          valid = /^[1-9]+[0-9]*$/.test(salary);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only numbers, no commas or spaces');
+            return false;
+          }
+        },
+      },
+      {
+        type: 'input',
+        message:
+          'Please enter the ID of the role you would like to give this employee (number):',
+        name: 'employeeNewRoleId',
+        default: () => {},
+        validate: function (salary) {
+          valid = /^[1-9]+[0-9]*$/.test(salary);
+
+          if (valid) {
+            return true;
+          } else {
+            console.log('\nPlease enter only numbers, no commas or spaces');
+            return false;
+          }
+        },
+      },
+    ])
+    .then((employeeSelection) => {
+      db.promise()
+        .query(
+          `UPDATE employee SET role_id = ${employeeSelection.employeeNewRoleId} WHERE id = ${employeeSelection.employeeIdSelection}`
+        )
+        .then(([rows, fields]) => {
+          console.log('\n');
+          viewEmployees();
+          runInquirer();
+        })
+        .catch(console.log);
+    });
+};
+
+// const viewEmployeeByDepartment = () => {
+//   db.promise()
+//     .query('SELECT id AS ID, name AS "Department Name" FROM department')
+//     .then(([rows, fields]) => {
+//       console.log('\n');
+//       console.table(rows);
+//       runInquirer();
+//     })
+//     .catch(console.log);
+// };
 
 const viewDepartments = () => {
   db.promise()
