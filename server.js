@@ -398,7 +398,12 @@ const viewRoles = () => {
 const viewEmployees = () => {
   db.promise()
     .query(
-      'SELECT id AS "Employee ID", first_name AS "First Name", last_name AS "Last Name", role_id AS "Role ID", manager_id AS "Manager ID" FROM employee'
+      `SELECT id AS "Employee ID", 
+      first_name AS "First Name", 
+      last_name AS "Last Name", 
+      role_id AS "Role ID", 
+      manager_id AS "Manager ID" 
+      FROM employee`
     )
     .then(([rows, fields]) => {
       console.log('\n');
