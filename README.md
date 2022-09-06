@@ -9,16 +9,16 @@
     <img src="./assets/img/logorec.png" alt="Logo" width="80">
   </a>
 
-<h3 align="center">CMS for employee data</h3>
+<h3 align="center">CMS for Employee Data</h3>
 
   <p align="center">
-    A CMS for employee data run through the command line using inquirer.
+    A CMS for employee data, using mysql, node.js, express.js, inquirer.
     <br />
     <br />
     <br />
-    <a href="https://github.com/GarrettLockhart/team-profile-generator/issues">Report Bug</a>
+    <a href="https://github.com/GarrettLockhart/employee-tracker/issues">Report Bug</a>
     ·
-    <a href="https://github.com/GarrettLockhart/team-profile-generator/issues">Request Feature</a>
+    <a href="https://github.com/GarrettLockhart/employee-tracker/issues">Request Feature</a>
   </p>
 </div>
 <br />
@@ -42,7 +42,7 @@
 
 ## About The Project
 
-This project was built using node.js and inquirer, and mysql, it is run from the command line and depending on selection will connect to a mysql database and query the information requested. Also takes advantage of the mysql2 npm package, dotenv npm package and the console.table npm package.
+This project was built using node.js and inquirer, and mysql, it is run from the command line and depending on selection will connect to a mysql database and query the information requested. It also had the functionality to update and modify the database based on terminal commands, And it takes advantage of the mysql2 npm package, dotenv npm package and the console.table npm package.
 
 ### Built With
 
@@ -100,8 +100,8 @@ Don't forget to give the project a star! Thanks again!
 
 ## Demo Screenshot and Video Walk through
 
-A walk through video of the application <a href="">here.</a>
+A walk through video of the application <a href="https://drive.google.com/file/d/1ZPkQ-kAI-6EZqX7yi5lNbHvaUUBHp-O3/view">here.</a>
 
-<img src="" alt="Demo Screenshot" />
+<img src="./assets/img/Screen Shot 2022-09-05 at 10.23.08 PM.png" alt="Demo Screenshot" />
 
 <p align="right">(<a href="#top">back to top</a>)</p>
