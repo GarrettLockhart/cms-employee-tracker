@@ -27,10 +27,6 @@ const runInquirer = () => {
           'Update an employee role',
           'Update an employee manager',
           'View employees by department',
-          'Delete a department',
-          'Delete a role',
-          'Delete an employee',
-          'View department budgets',
           'No Action',
         ],
         name: 'userSelection',
@@ -63,6 +59,9 @@ const runInquirer = () => {
       }
       if (answers.userSelection === 'View employees by department') {
         viewEmployeeByDepartment();
+      }
+      if (answers.userSelection === 'No Action') {
+        connectionEnd();
       }
     });
 };
@@ -354,16 +353,23 @@ const updateEmployeeRole = () => {
     });
 };
 
-// const viewEmployeeByDepartment = () => {
-//   db.promise()
-//     .query('SELECT id AS ID, name AS "Department Name" FROM department')
-//     .then(([rows, fields]) => {
-//       console.log('\n');
-//       console.table(rows);
-//       runInquirer();
-//     })
-//     .catch(console.log);
-// };
+const viewEmployeeByDepartment = () => {
+  db.promise()
+    .query(
+      `SELECT employee.first_name AS "First Name",
+      employee.last_name AS "Last Name", 
+      department.name AS Department
+      FROM employee 
+      LEFT JOIN role ON employee.role_id = role.id 
+      LEFT JOIN department ON role.department_id = department.id`
+    )
+    .then(([rows, fields]) => {
+      console.log('\n');
+      console.table(rows);
+      runInquirer();
+    })
+    .catch(console.log);
+};
 
 const viewDepartments = () => {
   db.promise()
@@ -402,7 +408,15 @@ const viewEmployees = () => {
     .catch(console.log);
 };
 
-app.listen(PORT, () => {
+const connectionEnd = () => {
+  console.log('Thanks, run "npm start" if you would like to go again.');
+  server.close((err) => {
+    console.log('Server has been closed');
+    process.exit(err ? 1 : 0);
+  });
+};
+
+const server = app.listen(PORT, () => {
   console.log(`\nServer is listening on http://localhost:${PORT}`);
 });
 
