@@ -2,7 +2,6 @@ const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const cTable = require('console.table');
-const db = require('./config/connection');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
@@ -10,6 +9,13 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
 const runInquirer = () => {
   inquirer
@@ -94,7 +100,6 @@ const addDepartment = () => {
         .then(([rows, fields]) => {
           console.log('\n');
           viewDepartments();
-          runInquirer();
         })
         .catch(console.log);
     });
@@ -160,7 +165,6 @@ const addRole = () => {
         .then(([rows, fields]) => {
           console.log('\n');
           viewRoles();
-          runInquirer();
         })
         .catch(console.log);
     });
@@ -243,7 +247,6 @@ const addEmployee = () => {
         .then(([rows, fields]) => {
           console.log('\n');
           viewEmployees();
-          runInquirer();
         })
         .catch(console.log);
     });
@@ -295,7 +298,6 @@ const updateEmployeeManager = () => {
         .then(([rows, fields]) => {
           console.log('\n');
           viewEmployees();
-          runInquirer();
         })
         .catch(console.log);
     });
@@ -347,7 +349,6 @@ const updateEmployeeRole = () => {
         .then(([rows, fields]) => {
           console.log('\n');
           viewEmployees();
-          runInquirer();
         })
         .catch(console.log);
     });
