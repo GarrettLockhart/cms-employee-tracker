@@ -42,7 +42,7 @@
 
 ## About The Project
 
-This project was built using node.js and inquirer, it is run from the command line and depending on selection will connect to a mysql database and query the information requested. Also takes advantage of the mysql2 npm package, and dotenv npm package.
+This project was built using node.js and inquirer, and mysql, it is run from the command line and depending on selection will connect to a mysql database and query the information requested. Also takes advantage of the mysql2 npm package, dotenv npm package and the console.table npm package.
 
 ### Built With
 
@@ -53,7 +53,6 @@ This project was built using node.js and inquirer, it is run from the command li
 - [dotenv](https://www.npmjs.com/package/dotenv)
 - [mysql2](https://www.npmjs.com/package/mysql2)
 - [console.table](https://www.npmjs.com/package/console.table)
-
 
 <br />
 <br />
